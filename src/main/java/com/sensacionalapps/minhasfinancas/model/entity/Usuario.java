@@ -2,6 +2,8 @@ package com.sensacionalapps.minhasfinancas.model.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class Usuario {
 	private String email;
 	
 	@Column(name="senha")
+	@JsonIgnore
 	private String senha;
 
 	@Column(name="data_cadastro")

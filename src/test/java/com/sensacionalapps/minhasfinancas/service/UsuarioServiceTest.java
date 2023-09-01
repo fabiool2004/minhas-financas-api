@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.sensacionalapps.minhasfinancas.exception.ErroAutenticacaoException;
 import com.sensacionalapps.minhasfinancas.exception.RegraNegocioException;
 import com.sensacionalapps.minhasfinancas.model.entity.Usuario;
 import com.sensacionalapps.minhasfinancas.model.repository.UsuarioRepository;
@@ -23,7 +21,7 @@ import com.sensacionalapps.minhasfinancas.service.impl.UsuarioServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class UsuarioServiceTest {
+class UsuarioServiceTest {
 
 	@MockBean
 	UsuarioRepository repository;
@@ -38,7 +36,7 @@ public class UsuarioServiceTest {
 //	}
 	
 	@Test
-	public void deveValidarEmail() {
+	void deveValidarEmail() {
 		//cenario
 		Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(false);
 		
@@ -48,7 +46,7 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	public void deveLancarExcecaoAoValidarEmail() {
+	void deveLancarExcecaoAoValidarEmail() {
 		//cenario
 		Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(true);
 
@@ -58,7 +56,7 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	public void deveAutenticarUsuarioComSucesso () {
+	void deveAutenticarUsuarioComSucesso () {
 		//cenario
 		String email = "usuario@email.com.br";
 		String senha = "senha";
@@ -70,7 +68,7 @@ public class UsuarioServiceTest {
 	}		
 	
 	@Test
-	public void deveLancarExcecaoNaoExisteUsuarioAoAutenticarUsuario () {
+	void deveLancarExcecaoNaoExisteUsuarioAoAutenticarUsuario () {
 		//cenario
 		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
 		
@@ -79,7 +77,7 @@ public class UsuarioServiceTest {
 	}		
 
 	@Test
-	public void deveLancarExcecaoSenhaInvalidaAoAutenticarUsuario () {
+	void deveLancarExcecaoSenhaInvalidaAoAutenticarUsuario () {
 		//cenario
 		String email = "usuario@email.com.br";
 		String senha = "senha";
@@ -91,7 +89,7 @@ public class UsuarioServiceTest {
 	}
 	
 	@Test
-	public void deveSalvarUsuario () {
+	void deveSalvarUsuario () {
 		//cenario
 		Mockito.doNothing().when(service).validarEmail(Mockito.anyString()); //Mockcando a execução do método validarEmail
 		Usuario usuario = Usuario.builder().id(1L).email("usuario@email.com.br").senha("senha").nome("nome").build();
@@ -102,14 +100,14 @@ public class UsuarioServiceTest {
 		
 		//verificacao
 		Assertions.assertNotNull(usuarioSalvo);
-		Assertions.assertEquals(usuarioSalvo.getId(), 1L);
-		Assertions.assertEquals(usuarioSalvo.getNome(), "nome");
-		Assertions.assertEquals(usuarioSalvo.getEmail(), "usuario@email.com.br");
-		Assertions.assertEquals(usuarioSalvo.getSenha(), "senha");
+		Assertions.assertEquals(1L, usuarioSalvo.getId());
+		Assertions.assertEquals("nome", usuarioSalvo.getNome());
+		Assertions.assertEquals("usuario@email.com.br", usuarioSalvo.getEmail());
+		Assertions.assertEquals("senha", usuarioSalvo.getSenha());
 	}
 	
 	@Test
-	public void naodeveSalvarUsuarioComEmailJaCadastrado () {
+	void naodeveSalvarUsuarioComEmailJaCadastrado () {
 		//cenario
 		Usuario usuario = Usuario.builder().id(1L).email("usuario@email.com.br").build();
 		Mockito.doThrow(RegraNegocioException.class).when(service).validarEmail("usuario@email.com.br"); //Mockando a execução do método validarEmail lançando uma exception
